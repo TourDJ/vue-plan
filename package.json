@@ -1,0 +1,51 @@
+{
+  "name": "vue-plan",
+  "version": "1.0.0",
+  "description": "A plan application implemented with vue and related ecosystem.",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test": "vue-cli-service test:unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smallbucket/vue-plan.git"
+  },
+  "keywords": [
+    "vue-plan",
+    "plan",
+    "todolist"
+  ],
+  "author": "tourDJ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smallbucket/vue-plan/issues"
+  },
+  "homepage": "https://github.com/Smallbucket/vue-plan#readme",
+  "dependencies": {
+    "core-js": "^3.3.2",
+    "register-service-worker": "^1.6.2",
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "^4.0.0",
+    "@vue/cli-plugin-pwa": "^4.0.0",
+    "@vue/cli-plugin-router": "^4.0.0",
+    "@vue/cli-plugin-vuex": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {}
+}
