@@ -1,22 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { mutations, STORAGE_KEY } from './mutations'
+import actions from './actions'
+import plugins from './plugins'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  state: {
-    count: 0
-  },
-  mutation: {
-    increment (state) {
-      state.count++ 
-    }
-  }
-})
-store.commit('increment')
-console.log(store.state.count)
-
-
 export default new Vuex.Store({
-  store
+  state: {
+    todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
+  },
+  actions,
+  mutations,
+  plugins
 })
