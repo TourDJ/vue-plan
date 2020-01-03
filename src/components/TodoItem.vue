@@ -1,11 +1,13 @@
 <template>
   <li class="todo" :class="{ completed: todo.done, editing: editing }">
     <div class="view">
+      <div>
       <input class="toggle"
         type="checkbox"
         :checked="todo.done"
         @change="toggleTodo(todo)">
       <label v-text="todo.text" @dblclick="editing = true"></label>
+      </div>
       <button class="destroy" @click="removeTodo(todo)"></button>
     </div>
     <input class="edit"

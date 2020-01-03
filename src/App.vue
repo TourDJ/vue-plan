@@ -2,7 +2,7 @@
   <section class="todoapp">
     <!-- header -->
     <header class="header">
-      <h1>todos</h1>
+      <h1>待办事项</h1>
       <input class="new-todo"
         autofocus
         autocomplete="off"
@@ -16,7 +16,7 @@
         type="checkbox"
         :checked="allChecked"
         @change="toggleAll(!allChecked)">
-      <label for="toggle-all"></label>
+      <label for="toggle-all"><span class="checkbox">All</span></label>
       <ul class="todo-list">
         <TodoItem
           v-for="(todo, index) in filteredTodos"
@@ -99,7 +99,5 @@ export default {
 </script>
 
 <style scoped>
-
+  @import './app.css';
 </style>
-
-

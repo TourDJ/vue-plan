@@ -1,0 +1,166 @@
+/** ------------------ */
+section.todoapp {
+	text-align: center;
+	font-family: 黑体;
+}
+
+/** ------------------ */
+header.header {
+	margin: 10px 0;
+}
+
+header.header h1 {
+	letter-spacing: 2px;
+}
+
+input.new-todo {
+	width: 80%;
+	height: 30px;
+	padding: 15px 10px;
+	margin: 5px 5px;
+	box-sizing: border-box;
+    border: 4px solid #8842d5;
+    border-radius: 6px;
+	outline:0;
+}
+
+input.new-todo::placeholder {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+/** ------------------ */
+
+section.main {
+	font-family: "arial black";
+}
+
+section.main .toggle-all{
+	display: none;
+}
+section.main label {
+	position: relative;
+}
+section.main span::before,
+section.main span::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+}
+section.main span.checkbox:hover {
+	cursor: pointer;
+}
+section.main span.checkbox::before {
+	width: 27px;
+	height: 27px;
+	background-color: #EEE;
+	left: -35px;
+	box-sizing: border-box;
+	border: 3px solid transparent;
+	transition: border-color .2s;
+}
+section.main span.checkbox:hover::before {
+	border: 3px solid #F0FF76;
+}
+section.main span.checkbox::after {
+	content: '\f00c';
+	font-family: 'FontAwesome';
+	left: -31px;
+	top: 2px;
+	color: transparent;
+	transition: color .2s;
+}
+input[type="checkbox"]:checked + label span.checkbox::after {
+	color: #62AFFF;
+}
+
+label.toggle-all span.checkbox {
+	
+}
+
+/** ------------------ */
+ul.todo-list {
+	margin: 0;
+	padding: 0;
+	width: auto;
+	font-size: 24px;
+}
+
+li.todo {
+	width: 80%;
+	margin: 10px 0;
+	margin-left: 10%;
+	list-style-type: none;
+}
+
+div.view {
+	width: 80%;
+	margin-left: 10%;
+	text-align: left;
+}
+
+div.view div {
+	width: 80%;
+	display: inline-block;
+}
+
+input.toggle {
+	
+}
+
+div.view label {
+	
+}
+
+button.destroy {
+	border: 0;
+	margin-left: 2px;
+	background: #FFFFFF;
+}
+
+button.destroy::after {
+	content: "\f00d";
+	font-family: 'FontAwesome';
+	cursor: pointer;
+	font-size: 24px;
+}
+
+input.edit {
+	
+}
+
+/** ------------------ */
+footer.footer {
+	
+}
+
+span.todo-count {
+	
+}
+
+ul.filters {
+	margin: 0;
+	padding: 0;
+	width: 50%;
+	margin-left: 25%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+ul.filters li {
+	list-style-type: none;
+	height: 30px;
+	width: 30%;
+	line-height: 30px;
+}
+
+ul.filters li a {
+	text-decoration: none;
+}
+
+button.clear-completed {
+	
+}

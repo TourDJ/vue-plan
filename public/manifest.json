@@ -1,0 +1,15 @@
+{
+  "name":"vue-plan",
+  "short_name":"vue-plan",
+  "theme_color":"#4DBA87",
+  "icons":[
+    {
+      "src":".favicon.ico",
+      "sizes":"32x32",
+      "type":"image/x-icon"
+    }
+  ],
+  "start_url":"./index.html",
+  "display":"standalone",
+  "background_color":"#000000"
+}
