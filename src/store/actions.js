@@ -1,12 +1,13 @@
 export default {
   addTodo ({ commit }, text) {
     commit('addTodo', {
-     text,
+      text,
       done: false
     })
   },
 
   removeTodo ({ commit }, todo) {
+	  console.log(todo)
     commit('removeTodo', todo)
   },
 
