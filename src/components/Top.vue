@@ -21,9 +21,12 @@
 		},
 		
 		mounted () {
-			this.axios
-			.get('http://localhost:8020/user/1')
+			// this.axios
+			// .get(baseUrl + '/user/1')
+			// getUser(1)
+			this.$service.user.getUser(1)
 			.then(response => {
+				console.log(response.data)
 				this.user = response.data.data
 			})
 			.catch((error)=>{
@@ -31,6 +34,7 @@
         this.errored = true
       })
 			.finally(() => this.loading = false)
+			
 		},
 		
 		filters: {

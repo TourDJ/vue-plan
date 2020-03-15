@@ -1,11 +1,10 @@
-let baseUrl 
-let routerMode
+let baseUrl, routerMode
 
 if (process.env.NODE_ENV == 'development') {
-	baseUrl = 'https://localhost:8020'
+	baseUrl = 'http://localhost:8020'
 	routerMode = 'history'
 } else {
-	baseUrl = 'https://192.168.0.105:8020'
+	baseUrl = 'http://192.168.0.105:8020'
 	routerMode = 'history'
 }
 

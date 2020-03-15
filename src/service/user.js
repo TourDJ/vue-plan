@@ -1,7 +1,11 @@
-import https from '../utils/https'
+import { baseUrl } from '../config/env'
+import axios from '../utils/http'
+import qs from 'qs'
 
-var getUser = () => https('GET', '/user/1');
-
-export {
-	getUser
+const user = {
+	getUser (id) {
+		return axios.get(`${baseUrl}/user/${id}`)
+	}
 }
+
+export default user
