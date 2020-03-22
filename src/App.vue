@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<router-view></router-view>
+	<div id="app">
+		<router-view/>
 	</div>
 </template>
 
@@ -13,5 +13,7 @@
 </script>
 
 <style>
-
+	#app {
+    height: 100%;
+	}
 </style>

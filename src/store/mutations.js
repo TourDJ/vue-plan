@@ -1,4 +1,5 @@
 export const STORAGE_KEY = 'todo-vuejs'
+export const ACCESS_TOKEN = 'Access-Token'
 
 export const mutations = {
   addTodo (state, todo) {

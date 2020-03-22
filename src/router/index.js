@@ -1,9 +1,10 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 import routes from './routers'
 
-Vue.use(VueRouter)
-const router = new VueRouter({
+Vue.use(Router)
+
+const router = new Router({
 	routes,
 	mode: 'history',
 	strict: process.env.NODE_ENV !== 'production'
