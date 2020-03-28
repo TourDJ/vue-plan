@@ -115,7 +115,7 @@ export default {
       loginType: 0,
       isLoginError: false,
       stepCaptchaVisible: false,
-      //form: this.$form.createForm(this),
+      form: this.$form.createForm(this),
       state: {
         time: 60,
         loginBtn: false,

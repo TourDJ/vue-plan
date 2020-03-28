@@ -3,6 +3,9 @@ import router from './router'
 import store from './store'
 import service from './service'
 
+import '@/core/AntDesign'
+import '@/components/global.less'
+
 Vue.config.productionTip = false
 
 Vue.prototype.$service = service
