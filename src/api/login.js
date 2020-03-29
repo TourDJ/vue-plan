@@ -1,9 +1,10 @@
-import loginApi from './index'
+import { loginApi } from './index'
 import axios from '@/utils/http'
+import { baseUrl } from '@/config/env'
 
 export function login (param) {
 	return axios({
-		url: loginApi.login,
+		url: `${baseUrl}${loginApi.login}`,
 		method: 'post',
 		data: param
 	})
@@ -11,8 +12,28 @@ export function login (param) {
 
 export function getSmsCaptcha (param) {
   return axios({
-    url: loginApi.SendSms,
+    url: `${baseUrl}${loginApi.SendSms}`,
     method: 'post',
     data: param
+  })
+}
+
+export function getInfo () {
+  return axios({
+    url: loginApi.getInfo,
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+
+export function logout () {
+  return axios({
+    url: loginApi.logout,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
   })
 }
