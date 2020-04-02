@@ -6,7 +6,7 @@ export function login (param) {
 	return axios({
 		url: `${baseUrl}${loginApi.login}`,
 		method: 'post',
-		data: param
+		data: {user: param}
 	})
 }
 

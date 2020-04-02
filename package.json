@@ -10,10 +10,6 @@
     "lint": "vue-cli-service lint",
     "test": "vue-cli-service test:unit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Smallbucket/vue-plan.git"
-  },
   "keywords": [
     "vue-plan",
     "plan",
@@ -21,15 +17,10 @@
   ],
   "author": "tourDJ",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Smallbucket/vue-plan/issues"
-  },
-  "homepage": "https://github.com/Smallbucket/vue-plan#readme",
   "dependencies": {
     "ant-design-vue": "^1.4.12",
     "axios": "^0.19.2",
     "core-js": "^3.3.2",
-    "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
     "moment": "^2.24.0",
     "qs": "^6.9.1",

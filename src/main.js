@@ -4,6 +4,7 @@ import store from './store'
 import service from './service'
 
 import '@/core/AntDesign'
+import '@/core/lazyPlugin'
 import '@/components/global.less'
 
 Vue.config.productionTip = false
