@@ -1,23 +1,33 @@
 import App from '../App'
-import index from '../view/index.vue'
-import { UserLayout } from '@/layout'
+import { UserLayout, BasicLayout } from '@/layout'
+import { bxAnaalyse } from '@/core/icons'
 
-const basicRouters = [{
+export const basicRouters = [{
 	path: '/',
+	name: "index",
 	component: App,
+  meta: { title: '首页' },
+  redirect: '/dashboard/workplace',
 	children: [
 		{
-			path: "",
-			redirect: "/index"
-		},
-		{
-			path: "/index",
-			component: index
+			path: 'dashboard',
+			name: 'dashboard',
+			component: BasicLayout,
+			redirect: '/dashboard/workplace',
+      meta: { title: '仪表盘', keepAlive: true, icon: bxAnaalyse, permission: [ 'dashboard' ] },
+			hidden: true,
+			children: [
+				{
+					path: 'workplace',
+					name: 'workplace',
+					component: () => import('../view/Workplace')
+				}
+			]
 		}
 	]
 }]
 
-const userRouters = [
+export const userRouters = [
 	{
 		path: '/user',
 		component: UserLayout,
@@ -65,7 +75,3 @@ const userRouters = [
 	// 	component: () => import('@/view/exception/404')
 	// }
 ]
-
-const routers = [...basicRouters, ...userRouters]
-
-export default routers

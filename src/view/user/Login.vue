@@ -14,7 +14,7 @@
 				>
         <a-tab-pane key="tab-account" tab="账号密码登录">
           <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" 
-							message="账户或密码错误（admin/ant.design )" />
+							message="账户或密码错误" />
           <a-form-item>
             <a-input
               size="large"
@@ -22,7 +22,13 @@
               placeholder="账户: admin"
               v-decorator="[
                 'username',
-                {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
+                {
+									rules: [
+										{ required: true, message: '请输入帐户名或邮箱地址' }, 
+										{ validator: handleUsernameOrEmail }
+									], 
+									validateTrigger: 'change'
+								}
               ]"
             >
 							<template v-slot:prefix>
@@ -53,7 +59,14 @@
         <a-tab-pane key="tab-mobile" tab="手机号登录">
           <a-form-item>
             <a-input size="large" type="text" placeholder="手机号" 
-							v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
+							v-decorator="[
+								'mobile', 
+								{
+									rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], 
+									validateTrigger: 'change'
+								}
+							]"
+							>
               <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -61,7 +74,15 @@
           <a-row :gutter="16">
             <a-col class="gutter-row" :span="16">
               <a-form-item>
-                <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
+                <a-input size="large" type="text" placeholder="验证码" 
+									v-decorator="[
+										'captcha', 
+										{
+											rules: [{ required: true, message: '请输入验证码' }], 
+											validateTrigger: 'blur'
+										}
+									]"
+									>
                   <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
                 </a-input>
               </a-form-item>
@@ -161,7 +182,9 @@ export default {
         Login
       } = this
       state.loginBtn = true
-      const validateFieldsKey = customActiveKey === 'tab-account' ? ['username', 'password'] : ['mobile', 'captcha']
+      const validateFieldsKey = customActiveKey === 'tab-account' 
+												? ['username', 'password'] 
+												: ['mobile', 'captcha']
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           console.log('login form', values)
@@ -170,7 +193,10 @@ export default {
           // loginParams[!state.loginType ? 'email' : 'username'] = values.username
           // loginParams.password = md5(values.password)
           Login(loginParams).then(res => {
-							this.loginSuccess(res)
+							if (res.data.status == 200)
+								this.loginSuccess(res)
+							else 
+								this.requestFailed(res)
 						})
             .catch(err => {
 							this.requestFailed(err)
@@ -233,7 +259,7 @@ export default {
       setTimeout(() => {
         this.$notification.success({
           message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
+          description: `${timeFix()}，${res.data.result.nickname}, 欢迎回来`
         })
       }, 1000)
       this.isLoginError = false
@@ -242,7 +268,7 @@ export default {
       this.isLoginError = true
       this.$notification['error']({
         message: '错误',
-        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
+        description: err.message || ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
         duration: 4
       })
     }

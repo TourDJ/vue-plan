@@ -5,6 +5,7 @@ import service from './service'
 
 import '@/core/AntDesign'
 import '@/core/lazyPlugin'
+import '@/core/permission' // permission control
 import '@/components/global.less'
 
 Vue.config.productionTip = false

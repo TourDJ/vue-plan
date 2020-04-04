@@ -18,9 +18,9 @@ export function getSmsCaptcha (param) {
   })
 }
 
-export function getInfo () {
+export function getInfo (token) {
   return axios({
-    url: loginApi.getInfo,
+    url: `${baseUrl}${loginApi.getInfo}?token=${token}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'

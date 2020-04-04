@@ -6,7 +6,7 @@ import { welcome } from '@/utils/util'
 const user = {
   state: {
     token: '',
-    name: '',
+    nickname: '',
     welcome: '',
     avatar: '',
     roles: [],
@@ -18,7 +18,7 @@ const user = {
       state.token = token
     },
     SET_NAME: (state, { name, welcome }) => {
-      state.name = name
+      state.nickname = name
       state.welcome = welcome
     },
     SET_AVATAR: (state, avatar) => {
@@ -37,13 +37,16 @@ const user = {
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-					console.log(response)
-          const result = response.data.result
-          Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
-          resolve()
+					// console.log(response)
+					if (response.data.status == 200) {
+						const result = response.data.result
+						Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+						commit('SET_TOKEN', result.token)
+						commit('SET_NAME', { name: result.nickname, welcome: welcome() })
+						commit('SET_AVATAR', result.avatar)
+					}
+          resolve(response)
         }).catch(error => {
-					alert(error)
           reject(error)
         })
       })
@@ -52,8 +55,8 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(response => {
-          const result = response.result
+        getInfo(Vue.ls.get(ACCESS_TOKEN)).then(response => {
+          const result = response.data.result
 
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role

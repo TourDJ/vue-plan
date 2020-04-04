@@ -66,14 +66,13 @@
 import { mapActions } from 'vuex'
 import TodoItem from './TodoItem.vue'
 import Top from '../components/Top.vue'
-import Bottom from '../components/Bottom.vue'
 const filters = {
   all: todos => todos,
   active: todos => todos.filter(todo => !todo.done),
   completed: todos => todos.filter(todo => todo.done)
 }
 export default {
-  components: { TodoItem, Top, Bottom },
+  components: { TodoItem, Top },
 	
   data () {
     return {
