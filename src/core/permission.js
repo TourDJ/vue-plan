@@ -11,7 +11,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['login', 'register', 'registerResult'] // no redirect whitelist
-const defaultRoutePath = '/dashboard/index'
+const defaultRoutePath = '/dashboard/workplace'
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
   
 	if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
-    if (to.path === '/user/login') {
+    if (to.path === '/') {
       next({ path: defaultRoutePath })
       NProgress.done()
     } else {
@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
-            const roles = res.result && res.result.role
+            const roles = res.data.result && res.data.result.role
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表
               // 动态添加可访问路由表
@@ -37,7 +37,8 @@ router.beforeEach((to, from, next) => {
               // 请求带有 redirect 重定向时，登录自动重定向到该地址
               const redirect = decodeURIComponent(from.query.redirect || to.path)
               if (to.path === redirect) {
-                // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                // hack方法 确保addRoutes已完成 ,set the replace: true so the 
+								// navigation will not leave a history record
                 next({ ...to, replace: true })
               } else {
                 // 跳转到目的路由
@@ -45,7 +46,7 @@ router.beforeEach((to, from, next) => {
               }
             })
           })
-          .catch(() => {
+          .catch((err) => {
             notification.error({
               message: '错误',
               description: '请求用户信息失败，请重试'

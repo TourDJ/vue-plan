@@ -30,10 +30,18 @@ export function getInfo (token) {
 
 export function logout () {
   return axios({
-    url: loginApi.logout,
+    url: `${baseUrl}${loginApi.logout}`,
     method: 'post',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   })
+}
+
+export function register (param) {
+	return axios({
+		url: `${baseUrl}${loginApi.register}`,
+		method: 'post',
+		data: {user: param}
+	})
 }

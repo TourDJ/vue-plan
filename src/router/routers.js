@@ -37,18 +37,18 @@ export const userRouters = [
 			{
 				path: 'login',
 				name: 'login',
-				component: () => import('../view/user/Login')
+				component: () => import('@/view/user/Login')
 			},
-			// {
-			// 	path: 'register',
-			// 	name: 'register',
-			// 	component: () => import('@/view/user/Register')
-			// },
-			// {
-			// 	path: 'register-result',
-			// 	name: 'registerResult',
-			// 	component: () => import('@/view/user/RegisterResult')
-			// },
+			{
+				path: 'register',
+				name: 'register',
+				component: () => import('@/view/user/Register')
+			},
+			{
+				path: 'register-result',
+				name: 'registerResult',
+				component: () => import('@/view/user/RegisterResult')
+			},
 			{
 				path: 'recover',
 				name: 'recover',

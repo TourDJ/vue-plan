@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { login, getInfo, logout } from '@/api/login'
+import { login, getInfo, logout, register } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
@@ -40,10 +40,8 @@ const user = {
 					// console.log(response)
 					if (response.data.status == 200) {
 						const result = response.data.result
-						Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
+						Vue.ls.set(ACCESS_TOKEN, result.token, 30 * 60 * 1000)
 						commit('SET_TOKEN', result.token)
-						commit('SET_NAME', { name: result.nickname, welcome: welcome() })
-						commit('SET_AVATAR', result.avatar)
 					}
           resolve(response)
         }).catch(error => {
@@ -57,7 +55,6 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(Vue.ls.get(ACCESS_TOKEN)).then(response => {
           const result = response.data.result
-
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
             role.permissions = result.role.permissions
@@ -67,7 +64,7 @@ const user = {
                 per.actionList = action
               }
             })
-            role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+            role.permissionList = role.permissions.map(permission => { return permission.permission })
             commit('SET_ROLES', result.role)
             commit('SET_INFO', result)
           } else {
@@ -97,7 +94,23 @@ const user = {
           Vue.ls.remove(ACCESS_TOKEN)
         })
       })
-    }
+    },
+		
+		Register ({ commit }, userInfo) {
+			return new Promise((resolve, reject) => {
+			  register(userInfo).then(response => {
+					// console.log(response)
+					if (response.data.status == 200) {
+						const result = response.data.result
+						Vue.ls.set(ACCESS_TOKEN, result.token, 5 * 60 * 1000)
+						commit('SET_TOKEN', result.token)
+					}
+			    resolve(response)
+			  }).catch(error => {
+			    reject(error)
+			  })
+			})
+		}
 
   }
 }

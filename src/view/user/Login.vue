@@ -19,7 +19,7 @@
             <a-input
               size="large"
               type="text"
-              placeholder="账户: admin"
+              placeholder="账号/邮箱"
               v-decorator="[
                 'username',
                 {
@@ -42,7 +42,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码: admin or ant.design"
+              placeholder="密码"
               v-decorator="[
                 'password',
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
@@ -153,11 +153,14 @@ export default {
       }
     }
   },
+	
   created () {
 
   },
+	
   methods: {
     ...mapActions(['Login', 'Logout']),
+		
     // handler
     handleUsernameOrEmail (rule, value, callback) {
       const { state } = this
@@ -169,10 +172,12 @@ export default {
       }
       callback()
     },
+		
     handleTabClick (key) {
       this.customActiveKey = key
       // this.form.resetFields()
     },
+		
     handleSubmit (e) {
       e.preventDefault()
       const {
@@ -189,9 +194,16 @@ export default {
         if (!err) {
           console.log('login form', values)
           const loginParams = { ...values }
-          // delete loginParams.username
-          // loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          // loginParams.password = md5(values.password)
+          if (loginParams.mobile) {
+						delete loginParams.username
+					} else {
+						delete loginParams.mobile
+						loginParams[!state.loginType ? 'email' : 'username'] = values.username
+						loginParams.password = md5(values.password)
+						if(!state.loginType) {
+							delete loginParams.username
+						}
+					}
           Login(loginParams).then(res => {
 							if (res.data.status == 200)
 								this.loginSuccess(res)
@@ -211,6 +223,7 @@ export default {
         }
       })
     },
+		
     getCaptcha (e) {
       e.preventDefault()
       const { form: { validateFields }, state } = this
@@ -225,15 +238,23 @@ export default {
             }
           }, 1000)
           const hide = this.$message.loading('验证码发送中..', 0)
+					setTimeout(hide, 2500)
           getSmsCaptcha({ phone: values.mobile }).then(res => {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: '验证码获取成功，您的验证码为：' + res.data.data + ', 有效期为5分钟',
-              duration: 8
-            })
+						setTimeout(hide, 10)
+						if (res.data.result){
+							this.$notification['success']({
+							  message: '提示',
+							  description: '验证码获取成功，您的验证码为：' + res.data.result + ', 有效期为5分钟。',
+							  duration: 8
+							})
+						} else {
+							this.$notification['error']({
+							  message: '错误',
+							  description: '验证码获取失败。',
+							  duration: 4
+							})
+						}
           }).catch(err => {
-            setTimeout(hide, 1)
             clearInterval(interval)
             state.time = 60
             state.smsSendBtn = false
@@ -242,17 +263,20 @@ export default {
         }
       })
     },
+		
     stepCaptchaSuccess () {
       this.loginSuccess()
     },
+		
     stepCaptchaCancel () {
       this.Logout().then(() => {
         this.loginBtn = false
         this.stepCaptchaVisible = false
       })
     },
+		
     loginSuccess (res) {
-      console.log(res)
+      // console.log(res)
       // check res.homePage define, set $router.push name res.homePage
       this.$router.push({ path: '/' })
       // 延迟 1 秒显示欢迎信息
@@ -264,6 +288,7 @@ export default {
       }, 1000)
       this.isLoginError = false
     },
+		
     requestFailed (err) {
       this.isLoginError = true
       this.$notification['error']({
