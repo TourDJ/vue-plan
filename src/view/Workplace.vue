@@ -1,5 +1,5 @@
 <template>
-	<div :style="{ background: '#fff', padding: '24px', minHeight: '440px' }">
+	<div :style="{ background: '#fff', padding: '10px', minHeight: '440px' }">
 		
 		<section class="todoapp">
 			<!-- header -->

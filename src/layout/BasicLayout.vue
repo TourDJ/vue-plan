@@ -36,20 +36,14 @@
 				<a-layout-content 
 					:style="{ height: '100%', margin: '0 10px 0 24px'}"
 					>
-					<div>
-						<a-row>
-							<a-col :span="1">
-								<div :style="{verticalAlign: 'middle'}">
-									<a-icon v-if="collapsed === false" type="menu-fold" @click="onCollapse1"/>
-									<a-icon v-else="collapsed === true" type="menu-unfold"  @click="onCollapse2"/>
-								</div>
-							</a-col>
-							<a-col :span="23">
-								<transition name="page-transition">
-									<router-view />
-								</transition>
-							</a-col>
-						</a-row>
+					<div style="background: #FFF">
+						<div :style="{height: '40px', padding: '3px 20px', fontSize: '24px'}">
+							<a-icon v-if="collapsed === false" type="menu-fold" @click="onCollapse"/>
+							<a-icon v-else="collapsed === true" type="menu-unfold"  @click="onCollapse"/>
+						</div>
+						<transition name="page-transition">
+							<router-view />
+						</transition>	
 					</div>
 				</a-layout-content>
       </a-layout>
@@ -114,14 +108,10 @@ export default {
 		onPanelChange(value, mode) {
 			console.log(value, mode);
 		},
-		onCollapse1(value) {
+		onCollapse(value) {
 			this.visible = !this.visible
 			this.collapsed = !this.collapsed
 		},
-		onCollapse2(value) {
-			this.visible = !this.visible
-			this.collapsed = !this.collapsed
-		}
   }
 }
 </script>
