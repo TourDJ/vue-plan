@@ -7,7 +7,7 @@ export const basicRouters = [{
 	name: "index",
 	component: App,
   meta: { title: '首页' },
-  redirect: '/dashboard/workplace',
+  redirect: '/dashboard',
 	children: [
 		{
 			path: 'dashboard',
@@ -20,7 +20,7 @@ export const basicRouters = [{
 				{
 					path: 'workplace',
 					name: 'workplace',
-					component: () => import('../view/Workplace')
+					component: () => import('@/view/Workplace')
 				}
 			]
 		}

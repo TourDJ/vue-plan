@@ -1,24 +1,58 @@
 <template>
-  <a-layout :class="['layout', device]">
+  <a-layout :class="['layout']">
       <!-- layout header -->
-      <global-header
+<!--      <global-header
         :mode="layoutMode"
         :menus="menus"
         :theme="navTheme"
         :collapsed="collapsed"
         :device="device"
         @toggle="toggle"
-      />
+      /> -->
+			<a-layout-header :style="{ position: 'fixed', zIndex: 1, width: '100%', padding: '0' }">
+				<global-header />
+      </a-layout-header>
 
-      <!-- layout content -->
-      <a-layout-content 
-				:style="{ height: '100%', margin: '24px 24px 0', paddingTop: fixedHeader ? '64px' : '0' }"
-				>
-        <multi-tab v-if="multiTab"></multi-tab>
-        <transition name="page-transition">
-          <router-view />
-        </transition>
-      </a-layout-content>
+      <a-layout :style="{ height: '100%', margin: '24px 24px 0', paddingTop: '64px'}">
+        <a-layout-sider v-if="visible" width="300" style="background: #fff">
+					<div :style="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+					    <a-calendar :fullscreen="false" @panelChange="onPanelChange" />
+					  </div>
+						<div>
+							<a-collapse v-model="activeKey">
+								<a-collapse-panel header="This is panel header 1" key="1">
+									<p>{{text}}</p>
+								</a-collapse-panel>
+								<a-collapse-panel header="This is panel header 2" key="2" :disabled="false">
+									<p>{{text}}</p>
+								</a-collapse-panel>
+								<a-collapse-panel header="This is panel header 3" key="3" disabled>
+									<p>{{text}}</p>
+								</a-collapse-panel>
+							</a-collapse>
+						</div>
+				</a-layout-sider>
+				<!-- layout content -->
+				<a-layout-content 
+					:style="{ height: '100%', margin: '0 10px 0 24px'}"
+					>
+					<div>
+						<a-row>
+							<a-col :span="1">
+								<div :style="{verticalAlign: 'middle'}">
+									<a-icon v-if="collapsed === false" type="menu-fold" @click="onCollapse1"/>
+									<a-icon v-else="collapsed === true" type="menu-unfold"  @click="onCollapse2"/>
+								</div>
+							</a-col>
+							<a-col :span="23">
+								<transition name="page-transition">
+									<router-view />
+								</transition>
+							</a-col>
+						</a-row>
+					</div>
+				</a-layout-content>
+      </a-layout>
 
       <!-- layout footer -->
       <a-layout-footer>
@@ -31,12 +65,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+// import { mixin, mixinDevice } from '@/utils/mixin'
 import config from '@/config/defaultSettings'
 import GlobalHeader from '@/components/GlobalHeader'
 import GlobalFooter from '@/components/GlobalFooter'
 // import { convertRoutes } from '@/utils/routeConvert'
 export default {
   name: 'BasicLayout',
+  // mixins: [mixin, mixinDevice],
   components: {
     GlobalHeader,
     GlobalFooter
@@ -45,9 +81,17 @@ export default {
     return {
       production: config.production,
       collapsed: false,
-      menus: []
+      menus: [],
+			visible: true,
+			text: `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`,
+			activeKey: ['1'],
     }
   },
+	watch: {
+		activeKey(key) {
+			console.log(key);
+		},
+	},
   computed: {
     ...mapState({
       // 动态主路由
@@ -67,7 +111,17 @@ export default {
   mounted () {
   },
   methods: {
-
+		onPanelChange(value, mode) {
+			console.log(value, mode);
+		},
+		onCollapse1(value) {
+			this.visible = !this.visible
+			this.collapsed = !this.collapsed
+		},
+		onCollapse2(value) {
+			this.visible = !this.visible
+			this.collapsed = !this.collapsed
+		}
   }
 }
 </script>

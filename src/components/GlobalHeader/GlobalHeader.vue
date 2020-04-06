@@ -1,24 +1,14 @@
 <template>
   <transition name="showHeader">
-    <div v-if="visible" class="header-animat">
-      <a-layout-header v-if="visible"
-        :class="[
-									fixedHeader && 'ant-header-fixedHeader', 
-									sidebarOpened ? 'ant-header-side-opened' : 'ant-header-side-closed', 
-								]"
-        :style="{ padding: '0' }"
-				>
-        <div :class="['top-nav-header-index', theme]">
-          <div class="header-index-wide">
-            <div class="header-index-left">
-              <logo class="top-nav-header" :show-title="device !== 'mobile'"/>
-              <s-menu v-if="device !== 'mobile'" mode="horizontal" :menu="menus" :theme="theme" />
-            </div>
-            <user-menu class="header-index-right"></user-menu>
-          </div>
-        </div>
-      </a-layout-header>
-    </div>
+		<div :class="['top-nav-header-index', theme]">
+			<div class="header-index-wide">
+				<div class="header-index-left">
+					<logo class="top-nav-header"/>
+					<!-- <s-menu mode="horizontal" :menu="menus" :theme="theme" /> -->
+				</div>
+				<user-menu class="header-index-right"></user-menu>
+			</div>
+		</div>
   </transition>
 </template>
 
@@ -35,35 +25,26 @@ export default {
     Logo
   },
   props: {
-    mode: {
-      type: String,
-      // sidemenu, topmenu
-      default: 'sidemenu'
-    },
-    menus: {
-      type: Array,
-      required: true
-    },
-    theme: {
-      type: String,
-      required: false,
-      default: 'light'
-    },
-    collapsed: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    device: {
-      type: String,
-      required: false,
-      default: 'desktop'
-    }
+    // mode: {
+    //   type: String,
+    //   // sidemenu, topmenu
+    //   default: 'sidemenu'
+    // },
+    // menus: {
+    //   type: Array,
+    //   required: true
+    // },
+    // theme: {
+    //   type: String,
+    //   required: false,
+    //   default: 'light'
+    // }
   },
   data () {
     return {
       visible: true,
-      oldScrollTop: 0
+      oldScrollTop: 0,
+			theme: 'light'
     }
   },
   mounted () {

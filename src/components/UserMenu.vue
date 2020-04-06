@@ -54,6 +54,8 @@ export default {
       this.$confirm({
         title: '提示',
         content: '真的要注销登录吗 ?',
+				okText: '确认',
+				cancelText: '取消',
         onOk: () => {
           return this.Logout({}).then(() => {
             setTimeout(() => {
