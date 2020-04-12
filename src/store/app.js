@@ -9,7 +9,8 @@ import {
   DEFAULT_FIXED_SIDEMENU,
   DEFAULT_FIXED_HEADER_HIDDEN,
   DEFAULT_CONTENT_WIDTH_TYPE,
-  DEFAULT_MULTI_TAB
+  DEFAULT_MULTI_TAB,
+	STORAGE_KEY
 } from '@/store/mutation-types'
 
 const app = {
@@ -24,7 +25,8 @@ const app = {
     autoHideHeader: false,
     color: null,
     weak: false,
-    multiTab: true
+    multiTab: true,
+		todos: JSON.parse('[]')
   },
   mutations: {
     SET_SIDEBAR_TYPE: (state, type) => {
@@ -74,7 +76,20 @@ const app = {
     TOGGLE_MULTI_TAB: (state, bool) => {
       Vue.ls.set(DEFAULT_MULTI_TAB, bool)
       state.multiTab = bool
-    }
+    },
+		
+		addTodo (state, todo) {
+			state.todos.push(todo)
+		},
+	
+		removeTodo (state, todo) {
+			state.todos.splice(state.todos.indexOf(todo), 1)
+		},
+	
+		editTodo (state, {todo, text = todo.text, done = todo.done } ) {
+			todo.text = text
+			todo.done = done
+		}
   },
   actions: {
     setSidebar ({ commit }, type) {
@@ -115,7 +130,40 @@ const app = {
     },
     ToggleMultiTab ({ commit }, bool) {
       commit('TOGGLE_MULTI_TAB', bool)
-    }
+    },
+		
+		addTodo ({ commit }, text) {
+			commit('addTodo', {
+				text,
+				done: false
+			})
+		},
+	
+		removeTodo ({ commit }, todo) {
+			console.log(todo)
+			commit('removeTodo', todo)
+		},
+	
+		toggleTodo ({ commit }, todo) {
+			commit('editTodo', {todo, done: !todo.done })
+		},
+	
+		editTodo ({ commit }, { todo, value }) {
+			commit('editTodo', {todo, text: value})
+		},
+	
+		toggleAll ({ state, commit }, done) {
+			state.todos.forEach((todo) => {
+				commit('editTodo', {todo, done})
+			})
+		},
+	
+		clearCompleted ({state, commit }) {
+			state.todos.filter(todo => todo.done)
+				.forEach(todo => {
+					commit('removeTodo', todo)
+				})
+		}
   }
 }
 

@@ -18,11 +18,11 @@ export default new Vuex.Store({
 		app,
 		permission
 	},
-  state: {
-    todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
-  },
-  actions,
-  mutations,
+  // state: {
+  //   todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]')
+  // },
+  // actions,
+  // mutations,
   plugins,
   getters
 })

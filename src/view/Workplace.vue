@@ -1,34 +1,42 @@
 <template>
 	<div :style="{ background: '#fff', padding: '10px', minHeight: '440px' }">
 		
-		<section class="todoapp">
-			<!-- header -->
-			<header class="header">
+		<div class="todoapp">
+			<div class="title">
 				<h1>待办事项</h1>
 				<input class="new-todo"
 					autofocus
 					autocomplete="off"
 					placeholder="What needs to be done?"
 					@keyup.enter="addTodo">
-			</header>
+			</div>
 
-			<!-- main section -->
-			<section class="main" v-show="todos.length">
-				<input class="toggle-all" id="toggle-all"
+			<div class="main" v-show="todos.length">
+				<div>
+					<div :style="{ borderBottom: '1px solid #E9E9E9' }">
+						<a-checkbox
+							@change="toggleAll(!allChecked)" 
+							:checked="allChecked">
+							全部
+						</a-checkbox>
+					</div>
+					<br />
+					<a-checkbox-group :options="todoOptions" v-model="checkList" @change="toggleTodo" />
+				</div>				
+<!-- 				<input class="toggle-all" id="toggle-all"
 					type="checkbox"
 					:checked="allChecked"
 					@change="toggleAll(!allChecked)">
-				<label for="toggle-all">All</label>
+				<label for="toggle-all">全部</label>
 				<ul class="todo-list">
 					<TodoItem
 						v-for="(todo, index) in filteredTodos"
 						:key="index"
 						:todo="todo"
 					/>
-				</ul>
-			</section>
+				</ul> -->
+			</div>
 
-			<!-- footer -->
 			<footer class="footer" v-show="todos.length">
 				<span class="todo-count">
 					<strong>{{ remaining }}</strong>
@@ -36,18 +44,19 @@
 				</span>
 				<ul class="filters">
 					<li v-for="(val, key) in filters" v-bind:key="key">
-						<a :href="'#/' + key"
+						<a-button type="primary" @click="visibility = key">{{ key | parse }}</a-button>
+<!-- 						<a :href="'#/' + key"
 							:class="{ selected: visibility === key }"
-							@click="visibility = key">{{ key | capitalize }}</a>
+							@click="visibility = key">{{ key | capitalize }}</a> -->
 					</li>
 				</ul>
-				<button class="clear-completed"
+<!-- 				<a-button type="primary"
 					v-show="todos.length > remaining"
 					@click="clearCompleted">
 					Clear Completed
-				</button>
+				</a-button> -->
 			</footer>
-		</section>
+		</div>
 		
 	</div>
 </template>
@@ -55,24 +64,27 @@
 <script>
 import { mapActions } from 'vuex'
 import TodoItem from '@/components/TodoItem.vue'
+
 const filters = {
   all: todos => todos,
   active: todos => todos.filter(todo => !todo.done),
   completed: todos => todos.filter(todo => todo.done)
 }
+
 export default {
   components: { TodoItem },
 	
   data () {
     return {
       visibility: 'all',
-      filters: filters
+      filters: filters,
+			checkList: []
     }
   },
 	
   computed: {
     todos () {
-      return this.$store.state.todos
+      return this.$store.state.app.todos
     },
     allChecked () {
       return this.todos.every(todo => todo.done)
@@ -82,7 +94,10 @@ export default {
     },
     remaining () {
       return this.todos.filter(todo => !todo.done).length
-    }
+    },
+		todoOptions () {
+			return this.todos.map(todo => todo.text)
+		}
   },
 	
   methods: {
@@ -100,38 +115,46 @@ export default {
   },
   filters: {
     pluralize: (n, w) => n === 1 || n === 0 ? w : (w + 's'),
-    capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
+    capitalize: s => s.charAt(0).toUpperCase() + s.slice(1),
+		parse: value => {
+			if(value == "active")
+				return "未完成"
+			else if(value == "completed")
+				return "已完成"
+			else
+				return "全部"
+		}
   }
 }
 </script>
 
 <style scoped>
-/** ---------section--------- */
-section.todoapp {
+
+ .todoapp {
 	margin: 0;
 	padding: 0;
-	font-family: 黑体;
+	font-family: 微软雅黑;
 }
 
-/** ---------header--------- */
-header.header {
+.title {
 	margin: 10px 0;
 	text-align: center;
 }
 
-header.header h1 {
-	letter-spacing: 2px;
+.title h1 {
+	font-size: 30px;
+	letter-spacing: 10px;
 }
 
 input.new-todo {
 	font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-	width: 80%;
+	width: 90%;
 	height: 30px;
 	padding: 15px 10px;
 	margin: 5px 5px;
 	box-sizing: border-box;
-    border: 4px solid #8842d5;
-    border-radius: 6px;
+  border: 4px solid #1890ff;
+  border-radius: 6px;
 	outline:0;
 }
 
@@ -139,9 +162,8 @@ input.new-todo::placeholder {
 	font-size: 1.2em;
 	font-weight: bold;
 }
-
-/** ---------main section--------- */
-section.main {
+/*
+.main {
 	font-family: "arial black";
 	font-size: 24px;
 }
@@ -155,7 +177,6 @@ input.toggle-all + label:hover {
 	cursor: pointer;
 }
 
-/** ---------todo list--------- */
 ul.todo-list {
 	margin: 0;
 	padding: 0;
@@ -221,7 +242,6 @@ input.edit {
 	outline:0;
 }
 
-/** ---------footer--------- */
 footer.footer {
 	margin: 0;
 	padding: 0;
@@ -282,5 +302,5 @@ button.clear-completed:hover {
 	cursor: pointer;
 	background: #1890ff;
 	color: #FFFFFF;
-}  
+} */ 
 </style>

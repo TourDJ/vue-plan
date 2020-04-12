@@ -15,38 +15,35 @@
 
       <a-layout :style="{ height: '100%', margin: '24px 24px 0', paddingTop: '64px'}">
         <a-layout-sider v-if="visible" width="300" style="background: #fff">
+					<div :style="{padding: '4px', fontSize: '20px'}">
+						<a-icon type="menu-fold" @click="onCollapse"/>
+						<a-divider type="vertical" />
+						<a-button type="link">今日事项</a-button>
+					</div>
+					<a-divider>日期选择</a-divider>
 					<div :style="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
-					    <a-calendar :fullscreen="false" @panelChange="onPanelChange" />
-					  </div>
-						<div>
-							<a-collapse v-model="activeKey">
-								<a-collapse-panel header="This is panel header 1" key="1">
-									<p>{{text}}</p>
-								</a-collapse-panel>
-								<a-collapse-panel header="This is panel header 2" key="2" :disabled="false">
-									<p>{{text}}</p>
-								</a-collapse-panel>
-								<a-collapse-panel header="This is panel header 3" key="3" disabled>
-									<p>{{text}}</p>
-								</a-collapse-panel>
-							</a-collapse>
-						</div>
+						<a-calendar :fullscreen="false" @panelChange="onPanelChange" />
+					</div>
 				</a-layout-sider>
+				<a-layout-sider v-if="!visible" width="30" style="background: #fff">
+					<div :style="{padding: '4px', fontSize: '20px'}">
+						<a-icon type="menu-unfold"  @click="onCollapse"/>
+						<a-icon type="home" />
+					</div>
+				</a-layout-sider>
+				
 				<!-- layout content -->
 				<a-layout-content 
-					:style="{ height: '100%', margin: '0 10px 0 24px'}"
+					:style="{ height: '100%', margin: '0 10px 0 0px'}"
 					>
 					<div style="background: #FFF">
-						<div :style="{height: '40px', padding: '3px 20px', fontSize: '24px'}">
-							<a-icon v-if="collapsed === false" type="menu-fold" @click="onCollapse"/>
-							<a-icon v-else="collapsed === true" type="menu-unfold"  @click="onCollapse"/>
-						</div>
 						<transition name="page-transition">
 							<router-view />
 						</transition>	
 					</div>
 				</a-layout-content>
-      </a-layout>
+			</a-layout>
+			
 
       <!-- layout footer -->
       <a-layout-footer>
