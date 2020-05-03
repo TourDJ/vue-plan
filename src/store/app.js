@@ -87,6 +87,10 @@ const app = {
 		removeTodo (state, todo) {
 			state.todos.splice(state.todos.indexOf(todo), 1)
 		},
+		
+		removeAllTodos(state) {
+			state.todos = []
+		},
 	
 		editTodo (state, {todo, text = todo.text, done = todo.done } ) {
 			todo.text = text
@@ -196,11 +200,8 @@ const app = {
 			})
 		},
 	
-		clearCompleted ({state, commit }) {
-			state.todos.filter(todo => todo.done)
-				.forEach(todo => {
-					commit('removeTodo', todo)
-				})
+		clear ({state, commit }) {
+			commit('removeAllTodos')
 		}
   }
 }

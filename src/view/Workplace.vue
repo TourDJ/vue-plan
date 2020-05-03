@@ -6,16 +6,11 @@
 				<input class="new-todo"
 					autofocus
 					autocomplete="off"
-					placeholder="What needs to be done?"
+					placeholder="有什么想要做的?"
 					@keyup.enter="addTodo">
 			</div>
 
 			<div class="main" v-show="todos.length">			
-<!-- 				<input class="toggle-all" id="toggle-all"
-					type="checkbox"
-					:checked="allChecked"
-					@change="toggleAll(!allChecked)">
-				<label for="toggle-all">全部</label> -->
 				<ul class="todo-list">
 					<TodoItem
 						v-for="(todo, index) in filteredTodos"
@@ -26,33 +21,48 @@
 			</div>
 
 			<footer class="footer" v-show="todos.length">
-				<span class="todo-count">
-					剩余 <strong>{{ remaining }}</strong> 项
-					<!-- {{ remaining | pluralize('item') }} left -->
-				</span>
-				<ul class="filters">
-					<li v-for="(val, key) in filters" v-bind:key="key">
-						<!-- <a-button type="primary" @click="visibility = key">{{ key | parse }}</a-button> -->
-						<a :href="'#/' + key"
-							:class="{ selected: visibility === key }"
-							@click="visibility = key">{{ key | parse }}</a>
-					</li>
-				</ul>
-<!-- 				<a-button type="primary"
-					v-show="todos.length > remaining"
-					@click="clearCompleted">
-					Clear Completed
-				</a-button> -->
+				<hr style="width: 90%; border-top: 4px solid forestgreen;" />
+				<div class="todo-footer">
+					<div class="todo-footer-title">
+						<strong>未完成：</strong>
+					</div>
+					<div class="todo-footer-count">
+						剩余 <strong>{{ remaining }}</strong> 项
+					</div>
+				</div>
+				
+				<div class="todo-footer">
+					<span class="todo-footer-title">
+						<strong>过滤选项：</strong>
+					</span>
+					<div class="todo-footer-count">
+						<a-radio-group @change="optionsChange" v-model="options">
+							<a-radio v-for="(val, key) in filters" v-bind:key="key" :value="key">
+								{{ key | parse }}
+							</a-radio>
+						</a-radio-group>
+<!-- 						<span v-for="(val, key) in filters" v-bind:key="key" class="todo-footer-item">
+							<a :href="'#/' + key"
+								:class="{ selected: visibility === key }"
+								@click="visibility = key">{{ key | parse }}</a>
+						</span> -->
+					</div>
+<!-- 					<ul class="filters">
+						<li v-for="(val, key) in filters" v-bind:key="key">
+							<a :href="'#/' + key"
+								:class="{ selected: visibility === key }"
+								@click="visibility = key">{{ key | parse }}</a>
+						</li>
+					</ul> -->
+				</div>
 			</footer>
 		</div>
 		
 		<footer-tool-bar :style="{ width: '100%'}">
-      <a-button type="primary" @click="save">提交</a-button>
-			<a-modal title="Basic Modal" v-model="visible" @ok="handleOk">
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-			</a-modal>
+			<a-button class="todo-btn" type="danger" ghost :disabled="disableButton"
+					@click="clearAll">清空</a-button>
+      <a-button class="todo-btn" type="primary" :disabled="disableButton"
+					@click="save">提交</a-button>
     </footer-tool-bar>
 	</div>
 </template>
@@ -78,6 +88,8 @@ export default {
       filters: filters,
 			checkList: [],
 			visible: false,
+			disableButton: true,
+			options: ''
     }
   },
 	
@@ -96,52 +108,81 @@ export default {
     },
     remaining () {
       return this.todos.filter(todo => !todo.done).length
-    },
-		todoOptions () {
-			return this.todos.map(todo => todo.text)
-		}
+    }
   },
 		
 	mounted: function () {
 		const user = this.$store.state.user.info.username
 		const date = dateFormat(new Date(), "yyyy-MM-dd")
-		console.log('111',user)
-		console.log(date)
 		const { GetTodoInfo } = this
 		GetTodoInfo({user, date}).then(res => {
-			console.log(res)
 			if(res.data.status == 200) {
 				if(res.data.result && res.data.result.todos) {
 					this.$store.commit('resetTodo', res.data.result.todos)
+					this.disableButton = false
 				}
 			}
+		}).catch(err => {
+			console.log(err)
 		})
 	},
 	
   methods: {
     ...mapActions([
       'toggleAll',
-      'clearCompleted',
+      'clear',
 			'SaveTodo',
 			'GetTodoInfo'
     ]),
 		
-		handleOk(e) {
-			const { SaveTodo } = this
-			const user = this.$store.state.user.info.username
-			const date = dateFormat(new Date(), "yyyy-MM-dd")
-			SaveTodo({user, date, todos: this.todos}).then(res => {
-				if (res.data.status == 200)
-					this.saveSuccess(res)
-			})
-			.catch(err => {
-				this.saveFailed(err)
-			})
-			this.visible = false;
+		optionsChange () {
+			this.visibility = this.options
+		},
+		
+		clearAll() {
+			const { clear } = this
+			this.$confirm({
+				title: '清空确认',
+				content: '确定一定以及肯定要删除所有代办事项吗?',
+				okText: '确定',
+				cancelText: '取消',
+				onOk() {
+					return new Promise((resolve, reject) => {
+						clear()
+						this.disableButton = true
+					}).catch((err) => {
+						console.log(err)
+					});
+				},
+				onCancel() {},
+			});
 		},
 				
 		save(e) {
+			const { SaveTodo } = this
 			this.visible = true;
+			this.$confirm({
+				title: '提交确认',
+				content: '确定要提交吗?',
+				okText: '确定',
+				cancelText: '取消',
+				onOk() {
+					return new Promise((resolve, reject) => {
+						const user = this.$store.state.user.info.username
+						const date = dateFormat(new Date(), "yyyy-MM-dd")
+						SaveTodo({user, date, todos: this.todos}).then(res => {
+							if (res.data.status == 200)
+								this.saveSuccess(res)
+						})
+						.catch(err => {
+							this.saveFailed(err)
+						})
+					}).catch((err) => {
+						console.log(err)
+					});
+				},
+				onCancel() {},
+			});
 		},
 		
     saveSuccess (res) {
@@ -169,6 +210,8 @@ export default {
         this.$store.dispatch('addTodo', {text, index: this.index + 1})
       }
       e.target.value = ''
+			if(this.todos.length > 0)
+				this.disableButton = false
     }
   },
 	
@@ -229,28 +272,44 @@ input.new-todo::placeholder {
 ul.todo-list {
 	margin: 0;
 	padding: 0;
-	width: 90%;
+	width: 100%;
 }
 
+/* footer style **/
 footer.footer {
 	margin: 0;
 	padding: 0;
+	margin-top: 50px;
 	font-size: 20px;
 	font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-	text-align: center;
+	text-align: left;
 }
 
-span.todo-count {
+div.todo-footer {
+	width: 90%;
+	margin-left: 5%;
+}
+
+.todo-footer-title {
 	display: inline-block;
-	width: 100%;
+	width: 15%;
+}
+
+.todo-footer-count {
+	display: inline-block;
+	width: 85%;
 	height: 30px;
 	line-height: 30px;
-	text-align: center;
+	text-align: left;
 	font-weight: bold;
 }
 
-span.todo-count strong {
+.todo-footer-count strong {
 	color: red;
+}
+
+.todo-footer-item {
+	
 }
 
 ul.filters {
@@ -261,6 +320,7 @@ ul.filters {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	bottom: 0;
 }
 
 ul.filters li {
@@ -279,18 +339,7 @@ ul.filters li a:hover {
 	font-weight: bold;
 }
 
-button.clear-completed {
-	font-size: 16px;
-	border: 2px solid #1890ff;
-	border-radius: 5px;
-	height: 40px;
-	background: #FFFFFF;
-	color: rgba(0, 0, 0, 0.65);
-}
-
-button.clear-completed:hover {
-	cursor: pointer;
-	background: #1890ff;
-	color: #FFFFFF;
+.todo-btn {
+	margin-left: 10px;
 }
 </style>
