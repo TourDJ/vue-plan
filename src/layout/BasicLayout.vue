@@ -14,7 +14,9 @@
       </a-layout-header>
 
       <a-layout :style="{ height: '100%', margin: '24px 24px 0', paddingTop: '64px'}">
-        <a-layout-sider v-if="visible" width="300" style="background: #fff">
+        <a-layout-sider v-if="visible" width="302" 
+					style="background: greenyellow;border-right:2px solid lightgreen;
+						height: 100%;z-index: 100;min-height: 560px;">
 					<div :style="{padding: '4px', fontSize: '20px'}">
 						<a-icon type="menu-fold" @click="onCollapse"/>
 						<a-divider type="vertical" />
@@ -25,7 +27,10 @@
 						<a-calendar :fullscreen="false" @panelChange="onPanelChange" />
 					</div>
 				</a-layout-sider>
-				<a-layout-sider v-if="!visible" width="30" style="background: #fff">
+				
+				<a-layout-sider v-if="!visible" width="30" 
+					style="background: yellowgreen;border-right:2px solid lightgreen;
+						z-index: 100;min-height: 560px;">
 					<div :style="{padding: '4px', fontSize: '20px'}">
 						<a-icon type="menu-unfold"  @click="onCollapse"/>
 						<a-icon type="home" />
@@ -46,9 +51,9 @@
 			
 
       <!-- layout footer -->
-      <a-layout-footer>
+<!--      <a-layout-footer>
         <global-footer />
-      </a-layout-footer>
+      </a-layout-footer> -->
 			
   </a-layout>
 

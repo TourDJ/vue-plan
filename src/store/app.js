@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { saveTodo, todoInfo } from '@/api/todo'
 import {
   SIDEBAR_TYPE,
   DEFAULT_THEME,
@@ -28,6 +29,7 @@ const app = {
     multiTab: true,
 		todos: JSON.parse('[]')
   },
+	
   mutations: {
     SET_SIDEBAR_TYPE: (state, type) => {
       state.sidebar = type
@@ -89,8 +91,13 @@ const app = {
 		editTodo (state, {todo, text = todo.text, done = todo.done } ) {
 			todo.text = text
 			todo.done = done
+		},
+		
+		resetTodo (state, todos) {
+			state.todos = todos
 		}
   },
+	
   actions: {
     setSidebar ({ commit }, type) {
       commit('SET_SIDEBAR_TYPE', type)
@@ -132,9 +139,40 @@ const app = {
       commit('TOGGLE_MULTI_TAB', bool)
     },
 		
-		addTodo ({ commit }, text) {
+		SaveTodo ({ commit }, payload) {
+			return new Promise((resolve, reject) => {
+				saveTodo(payload).then(response => {
+					console.log(response)
+					if (response.data.status == 200) {
+						const result = response.data.result
+						// commit('addTodo', {
+						// 	index: payload.index,
+						// 	text: payload.text,
+						// 	done: false
+						// })
+					}
+		      resolve(response)
+		    }).catch(error => {
+		      reject(error)
+		    })
+			})
+		},
+		
+		GetTodoInfo ({ commit }, payload) {
+			const { user, date } = payload
+			return new Promise((resolve, reject) => {
+				todoInfo(user, date).then(response => {
+					resolve(response)
+				}).catch(error => {
+					reject(error)
+				})
+			})
+		},
+		
+		addTodo ({ commit }, payload) {
 			commit('addTodo', {
-				text,
+				index: payload.index,
+				text: payload.text,
 				done: false
 			})
 		},

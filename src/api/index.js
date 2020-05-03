@@ -5,3 +5,8 @@ export const loginApi = {
 	getInfo: '/user/info',
 	register: '/user/register'
 }
+
+export const todoApi = {
+	saveTodo: '/todo/save',
+	todoInfo: '/todo/info'
+}

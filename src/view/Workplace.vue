@@ -1,6 +1,5 @@
 <template>
-	<div :style="{ background: '#fff', padding: '10px', minHeight: '440px' }">
-		
+	<div :style="{ background: '#fff', padding: '10px', minHeight: '440px' }">		
 		<div class="todoapp">
 			<div class="title">
 				<h1>待办事项</h1>
@@ -11,43 +10,32 @@
 					@keyup.enter="addTodo">
 			</div>
 
-			<div class="main" v-show="todos.length">
-				<div>
-					<div :style="{ borderBottom: '1px solid #E9E9E9' }">
-						<a-checkbox
-							@change="toggleAll(!allChecked)" 
-							:checked="allChecked">
-							全部
-						</a-checkbox>
-					</div>
-					<br />
-					<a-checkbox-group :options="todoOptions" v-model="checkList" @change="toggleTodo" />
-				</div>				
+			<div class="main" v-show="todos.length">			
 <!-- 				<input class="toggle-all" id="toggle-all"
 					type="checkbox"
 					:checked="allChecked"
 					@change="toggleAll(!allChecked)">
-				<label for="toggle-all">全部</label>
+				<label for="toggle-all">全部</label> -->
 				<ul class="todo-list">
 					<TodoItem
 						v-for="(todo, index) in filteredTodos"
 						:key="index"
 						:todo="todo"
 					/>
-				</ul> -->
+				</ul>
 			</div>
 
 			<footer class="footer" v-show="todos.length">
 				<span class="todo-count">
-					<strong>{{ remaining }}</strong>
-					{{ remaining | pluralize('item') }} left
+					剩余 <strong>{{ remaining }}</strong> 项
+					<!-- {{ remaining | pluralize('item') }} left -->
 				</span>
 				<ul class="filters">
 					<li v-for="(val, key) in filters" v-bind:key="key">
-						<a-button type="primary" @click="visibility = key">{{ key | parse }}</a-button>
-<!-- 						<a :href="'#/' + key"
+						<!-- <a-button type="primary" @click="visibility = key">{{ key | parse }}</a-button> -->
+						<a :href="'#/' + key"
 							:class="{ selected: visibility === key }"
-							@click="visibility = key">{{ key | capitalize }}</a> -->
+							@click="visibility = key">{{ key | parse }}</a>
 					</li>
 				</ul>
 <!-- 				<a-button type="primary"
@@ -58,12 +46,22 @@
 			</footer>
 		</div>
 		
+		<footer-tool-bar :style="{ width: '100%'}">
+      <a-button type="primary" @click="save">提交</a-button>
+			<a-modal title="Basic Modal" v-model="visible" @ok="handleOk">
+				<p>Some contents...</p>
+				<p>Some contents...</p>
+				<p>Some contents...</p>
+			</a-modal>
+    </footer-tool-bar>
 	</div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import TodoItem from '@/components/TodoItem.vue'
+import FooterToolBar from '@/components/FooterToolbar'
+import { dateFormat } from '@/utils/util'
 
 const filters = {
   all: todos => todos,
@@ -72,13 +70,14 @@ const filters = {
 }
 
 export default {
-  components: { TodoItem },
+  components: { TodoItem, FooterToolBar },
 	
   data () {
     return {
       visibility: 'all',
       filters: filters,
-			checkList: []
+			checkList: [],
+			visible: false,
     }
   },
 	
@@ -86,6 +85,9 @@ export default {
     todos () {
       return this.$store.state.app.todos
     },
+		index () {
+			return this.todos.length
+		},
     allChecked () {
       return this.todos.every(todo => todo.done)
     },
@@ -99,20 +101,77 @@ export default {
 			return this.todos.map(todo => todo.text)
 		}
   },
+		
+	mounted: function () {
+		const user = this.$store.state.user.info.username
+		const date = dateFormat(new Date(), "yyyy-MM-dd")
+		console.log('111',user)
+		console.log(date)
+		const { GetTodoInfo } = this
+		GetTodoInfo({user, date}).then(res => {
+			console.log(res)
+			if(res.data.status == 200) {
+				if(res.data.result && res.data.result.todos) {
+					this.$store.commit('resetTodo', res.data.result.todos)
+				}
+			}
+		})
+	},
 	
   methods: {
     ...mapActions([
       'toggleAll',
-      'clearCompleted'
+      'clearCompleted',
+			'SaveTodo',
+			'GetTodoInfo'
     ]),
+		
+		handleOk(e) {
+			const { SaveTodo } = this
+			const user = this.$store.state.user.info.username
+			const date = dateFormat(new Date(), "yyyy-MM-dd")
+			SaveTodo({user, date, todos: this.todos}).then(res => {
+				if (res.data.status == 200)
+					this.saveSuccess(res)
+			})
+			.catch(err => {
+				this.saveFailed(err)
+			})
+			this.visible = false;
+		},
+				
+		save(e) {
+			this.visible = true;
+		},
+		
+    saveSuccess (res) {
+      // console.log(res)
+      // 延迟 1 秒显示欢迎信息
+      setTimeout(() => {
+        this.$notification.success({
+          message: '信息',
+          description: `操作成功`
+        })
+      }, 500)
+    },
+		
+    saveFailed (err) {
+      this.$notification['error']({
+        message: '错误',
+        description: ((err || {}).data || {}).message || '请求出现错误，请稍后再试',
+        duration: 4
+      })
+    },
+		
     addTodo (e) {
       const text = e.target.value
       if (text.trim()) {
-        this.$store.dispatch('addTodo', text)
+        this.$store.dispatch('addTodo', {text, index: this.index + 1})
       }
       e.target.value = ''
     }
   },
+	
   filters: {
     pluralize: (n, w) => n === 1 || n === 0 ? w : (w + 's'),
     capitalize: s => s.charAt(0).toUpperCase() + s.slice(1),
@@ -128,7 +187,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
  .todoapp {
 	margin: 0;
@@ -162,84 +221,15 @@ input.new-todo::placeholder {
 	font-size: 1.2em;
 	font-weight: bold;
 }
-/*
-.main {
-	font-family: "arial black";
-	font-size: 24px;
-}
 
-input.toggle-all{
-	text-align: left;
-	margin-left: 10%;
-}
-input.toggle-all + label:hover {
-	color: blue;
-	cursor: pointer;
+.main {
+	font-size: 24px;
 }
 
 ul.todo-list {
 	margin: 0;
 	padding: 0;
-	width: auto;
-}
-
-li.todo {
-	width: 80%;
-	margin: 10px 0;
-	margin-left: 10%;
-	list-style-type: none;
-}
-
-div.view {
-	width: 100%;
-	text-align: left;
-}
-
-div.item {
-	width: 80%;
-	display: inline-block;
-}
-
-input.toggle {
-	margin-left: 0;
-}
-
-div.view label:hover {
-	color: coral;
-	cursor: pointer;
-}
-
-div.item-destroy {
-	width: 20%;
-	text-align: right;
-	display: inline-block;
-}
-
-button.destroy {
-	border: 0;
-	position: relative;
-	margin-left: 2px;
-	background: #FFFFFF;
-}
-
-button.destroy::after {
-	content: "\f00d";
-	font-family: 'FontAwesome';
-	cursor: pointer;
-	font-size: 24px;
-}
-
-button.destroy:hover {
-	background: #FF7F50;
-}
-
-input.edit {
-	border: 0;
-	border-bottom: 4px solid #0000FF;
-	margin-left: 5px;
-	font-family: "courier new";
-	font-size: 18px;
-	outline:0;
+	width: 90%;
 }
 
 footer.footer {
@@ -302,5 +292,5 @@ button.clear-completed:hover {
 	cursor: pointer;
 	background: #1890ff;
 	color: #FFFFFF;
-} */ 
+}
 </style>
