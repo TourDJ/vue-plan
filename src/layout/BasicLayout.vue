@@ -24,7 +24,8 @@
 					</div>
 					<a-divider>日期选择</a-divider>
 					<div :style="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
-						<a-calendar :fullscreen="false" @panelChange="onPanelChange" />
+						<a-calendar :fullscreen="false" @panelChange="onPanelChange" 
+              @select="onSelect"/>
 					</div>
 				</a-layout-sider>
 				
@@ -114,6 +115,11 @@ export default {
 			this.visible = !this.visible
 			this.collapsed = !this.collapsed
 		},
+
+    onSelect(value) {
+      console.log(value);
+      this.$router.push({ path: '/month' })
+    },
   }
 }
 </script>

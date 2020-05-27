@@ -7,8 +7,11 @@ export const basicRouters = [{
 	name: "index",
 	component: App,
   meta: { title: '首页' },
-  redirect: '/dashboard',
 	children: [
+		{
+			path: "",
+			redirect: '/dashboard'
+		},
 		{
 			path: 'dashboard',
 			name: 'dashboard',
@@ -23,9 +26,22 @@ export const basicRouters = [{
 					component: () => import('@/view/Workplace')
 				}
 			]
+		},
+		{
+			path: "month",
+			component: BasicLayout,
+			redirect: '/month/plan',
+			children: [
+				{
+					path: 'plan',
+					name: 'plan',
+					component: () => import('@/view/todo/MonthPlan.vue')
+				}
+			]
 		}
 	]
-}]
+}
+]
 
 export const userRouters = [
 	{
