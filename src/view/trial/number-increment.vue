@@ -9,6 +9,7 @@
 </template>
 
 <script>
+//tween安装： npm install --save @tweenjs/tween.js
 import TWEEN from '@tweenjs/tween.js'
 
 export default {
