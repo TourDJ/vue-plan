@@ -105,3 +105,44 @@ export function dateFormat (date, fmt) {
     
 	return fmt
 }
+
+function deleteArrayElement(arr) {
+	for(let i = arr.length - 1; i >= 0; i--) {
+  	if(arr[i] == 2) {
+      arr.splice(i, 1);
+	  }
+	}
+}
+
+
+
+function deepCopyArray(arr) {
+	let result = []
+
+	for (let i = 0; i < arr.length; i++) {
+		let temp = arr[i]
+		let obj = {}
+		for (var key in temp) {
+	    obj[key] = temp[key]
+	  }
+	 	result.push(obj)
+	}
+
+	return result
+}
+
+function tree(treeData2) {
+	treeData2.forEach(function(item) {
+    let child = item.children
+    for(let j = child.length - 1; j >= 0; j--) {
+      let children = child[j].children
+      for(let i = children.length - 1; i >= 0; i--) {
+        if(!children[i].keyword.includes(value)) {
+          children.splice(i, 1);
+        }
+      }
+      if(children.length == 0)
+        child.splice(j, 1)
+    }
+  })
+}
